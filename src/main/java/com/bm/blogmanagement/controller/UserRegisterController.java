@@ -1,7 +1,6 @@
 package com.bm.blogmanagement.controller;
 
 import com.bm.blogmanagement.dto.UserDto;
-import com.bm.blogmanagement.entity.Users;
 import com.bm.blogmanagement.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,7 @@ public class UserRegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) throws ParseException {
-         userDto = userService.saveUser(userDto);
+        userDto = userService.saveUser(userDto);
         return ResponseEntity.ok(userDto);
     }
 }

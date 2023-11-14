@@ -14,5 +14,10 @@ public class AuthorizedUser {
         AuthorizedUser.users = users;
     }
 
+    public static void isUserLogin() {
+        if (users == null) {
+            throw new RuntimeException("Unauthorized user");
+        }
+    }
 
 }
