@@ -16,14 +16,18 @@ public class BlogPost {
     private Long id;
 
     private String title;
+
     private String content;
+
+    @Column(name = "thumbnail_image_url")
+    private String thumbnailImageUrl;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "blogPost")
     private List<Comment> comments;
 
-    @Lob
-    private byte[] thumbnail;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private Users users;
 
 }
 

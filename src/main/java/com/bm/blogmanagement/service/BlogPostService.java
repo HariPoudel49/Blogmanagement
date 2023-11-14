@@ -5,7 +5,7 @@ import com.bm.blogmanagement.dto.CommentDto;
 import com.bm.blogmanagement.entity.BlogPost;
 
 public interface BlogPostService {
-    BlogPost addBlogPost(BlogPostDto blogPostDto);
+    BlogPostDto addBlogPost(BlogPostDto blogPostDto);
 
     CommentDto addComment(CommentDto commentDto);
 }

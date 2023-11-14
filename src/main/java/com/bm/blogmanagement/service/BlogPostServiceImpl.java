@@ -1,15 +1,20 @@
 package com.bm.blogmanagement.service;
 
+import com.bm.blogmanagement.config.AuthorizedUser;
 import com.bm.blogmanagement.dto.BlogPostDto;
 import com.bm.blogmanagement.dto.CommentDto;
 import com.bm.blogmanagement.entity.BlogPost;
 import com.bm.blogmanagement.entity.Comment;
 import com.bm.blogmanagement.repo.BlogPostRepo;
 import com.bm.blogmanagement.repo.CommentRepo;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BlogPostServiceImpl implements BlogPostService {
@@ -24,14 +29,21 @@ public class BlogPostServiceImpl implements BlogPostService {
 
 
     @Override
-    public BlogPost addBlogPost(BlogPostDto blogPostDto) {
+    public BlogPostDto addBlogPost(BlogPostDto blogPostDto) {
 
         BlogPost blogPost = new BlogPost();
+        blogPost.setId(blogPostDto.getId());
         blogPost.setTitle(blogPostDto.getTitle());
         blogPost.setContent(blogPostDto.getContent());
-        blogPost.setThumbnail(blogPostDto.getThumbnail()); // Assuming the thumbnail is a byte array
-
-        return blogPostRepo.save(blogPost);
+        try {
+            blogPost.setThumbnailImageUrl(saveImage(blogPostDto.getThumbnail()));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        blogPost.setUsers(AuthorizedUser.getUsers());
+        blogPostRepo.save(blogPost);
+        blogPostDto.setThumbnail(null);
+        return blogPostDto;
 
     }
 
@@ -47,11 +59,32 @@ public class BlogPostServiceImpl implements BlogPostService {
             blogPost.setComments(new ArrayList<>());
         }
         blogPost.getComments().add(comment);
-
+        comment.setUsers(AuthorizedUser.getUsers());
         commentRepo.save(comment);
 
         return commentDto;
 
+    }
 
+    private String saveImage(MultipartFile image) throws IOException {
+        String fileDir = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "blog";
+        File path = new File(fileDir);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        String filePath;
+        String ext = FilenameUtils.getExtension(image.getOriginalFilename());
+        assert ext != null;
+        if (ext.equalsIgnoreCase("jpg") ||
+                ext.equalsIgnoreCase("png") ||
+                ext.equalsIgnoreCase("jpeg")) {
+            UUID uuid = UUID.randomUUID();
+            filePath = fileDir + File.separator + uuid + "-" + image.getOriginalFilename();
+            File newFile = new File(filePath);
+            image.transferTo(newFile);
+        } else {
+            throw new RuntimeException("Invalid file");
+        }
+        return filePath;
     }
 }

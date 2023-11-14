@@ -35,13 +35,13 @@ public class UserServiceImpl implements UserService {
     public String login(LoginDto loginDto) {
         Users users = userRepo.getUsersByUserName(loginDto.getUserName());
         if (users == null) {
-            return "Invalid username and password";
+            throw new RuntimeException("Invalid username and password");
         }
         if (users.getPassword().equals(loginDto.getPassword())) {
             AuthorizedUser.setUsers(users);
             return "user login successfully !";
         } else {
-            return "Invalid username and password";
+            throw new RuntimeException("Invalid username and password");
         }
     }
 }

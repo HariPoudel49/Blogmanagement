@@ -1,6 +1,7 @@
 package com.bm.blogmanagement.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class BlogPostDto {
@@ -10,6 +11,5 @@ public class BlogPostDto {
 
     private String title;
     private String content;
-
-    private byte[] thumbnail;
+    private MultipartFile thumbnail;
 }

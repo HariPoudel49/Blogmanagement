@@ -19,8 +19,9 @@ public class Comment {
     @JoinColumn(name = "blog_post_id")
     private BlogPost blogPost;
 
-    public Comment() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private Users users;
 
 
 }
