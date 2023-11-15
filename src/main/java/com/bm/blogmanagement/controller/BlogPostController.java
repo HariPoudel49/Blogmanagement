@@ -3,7 +3,6 @@ package com.bm.blogmanagement.controller;
 import com.bm.blogmanagement.config.AuthorizedUser;
 import com.bm.blogmanagement.dto.BlogPostDto;
 import com.bm.blogmanagement.dto.CommentDto;
-import com.bm.blogmanagement.entity.BlogPost;
 import com.bm.blogmanagement.service.BlogPostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +28,12 @@ public class BlogPostController {
         AuthorizedUser.isUserLogin();
         CommentDto comments = blogPostService.addComment(commentDto);
         return ResponseEntity.ok(comments);
+    }
+
+    @DeleteMapping("/comment/delete/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Integer commentId) {
+        AuthorizedUser.isUserLogin();
+        String isDeleted = blogPostService.deleteComment(commentId);
+        return ResponseEntity.ok(isDeleted);
     }
 }

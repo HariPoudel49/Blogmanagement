@@ -7,6 +7,7 @@ import com.bm.blogmanagement.entity.BlogPost;
 import com.bm.blogmanagement.entity.Comment;
 import com.bm.blogmanagement.repo.BlogPostRepo;
 import com.bm.blogmanagement.repo.CommentRepo;
+import jakarta.transaction.Transactional;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +65,18 @@ public class BlogPostServiceImpl implements BlogPostService {
 
         return commentDto;
 
+    }
+
+    @Override
+    @Transactional //use to roll back in case of Exception
+    public String deleteComment(Integer commentId) {
+        try {
+            commentRepo.deleteCommentById(commentId);
+            return "Comment Deleted Successfully..!";
+        }catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
     }
 
     private String saveImage(MultipartFile image) throws IOException {
