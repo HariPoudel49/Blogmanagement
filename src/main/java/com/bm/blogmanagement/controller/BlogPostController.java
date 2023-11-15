@@ -36,4 +36,10 @@ public class BlogPostController {
         String isDeleted = blogPostService.deleteComment(commentId);
         return ResponseEntity.ok(isDeleted);
     }
+    @DeleteMapping("/delete/{blogPostId}")
+    public ResponseEntity<String> deleteBlogPost(@PathVariable Integer blogPostId){
+        AuthorizedUser.isUserLogin();
+       return ResponseEntity.ok(blogPostService.deleteBlogPost(blogPostId));
+    }
+
 }

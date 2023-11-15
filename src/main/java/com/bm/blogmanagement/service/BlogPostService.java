@@ -9,4 +9,6 @@ public interface BlogPostService {
     CommentDto addComment(CommentDto commentDto);
 
     String deleteComment(Integer commentId);
+    String deleteBlogPost(Integer  blogpostId);
+
 }

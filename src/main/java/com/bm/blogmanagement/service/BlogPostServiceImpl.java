@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -76,6 +77,21 @@ public class BlogPostServiceImpl implements BlogPostService {
         }catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
+        }
+    }
+
+    @Override
+    @Transactional
+    public String deleteBlogPost(Integer blogpostId) {
+        try {
+            commentRepo.deleteCommentByBlogPostId(blogpostId);
+            blogPostRepo.deleteBlogPostById(blogpostId);
+            return "Blog Post Was deleted Successfully";
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return "unable to delete bolg post";
         }
     }
 
