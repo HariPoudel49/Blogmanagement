@@ -5,6 +5,7 @@ import com.bm.blogmanagement.dto.BlogPostDto;
 import com.bm.blogmanagement.dto.CommentDto;
 import com.bm.blogmanagement.entity.BlogPost;
 import com.bm.blogmanagement.entity.Comment;
+import com.bm.blogmanagement.entity.Users;
 import com.bm.blogmanagement.repo.BlogPostRepo;
 import com.bm.blogmanagement.repo.CommentRepo;
 import jakarta.transaction.Transactional;
@@ -14,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -74,7 +75,7 @@ public class BlogPostServiceImpl implements BlogPostService {
         try {
             commentRepo.deleteCommentById(commentId);
             return "Comment Deleted Successfully..!";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
         }
@@ -88,11 +89,29 @@ public class BlogPostServiceImpl implements BlogPostService {
             blogPostRepo.deleteBlogPostById(blogpostId);
             return "Blog Post Was deleted Successfully";
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "unable to delete bolg post";
         }
+    }
+
+    @Override
+    public List<BlogPost> getBlogPostList() {
+        List<BlogPost> blogPostList = blogPostRepo.getBlogPostList();
+        blogPostList.forEach(blogPost -> {
+            final Users[] users = {blogPost.getUsers()};
+            users[0].setPassword(null);
+            users[0].setDateOfBirth(null);
+            blogPost.setUsers(users[0]);
+            List<Comment> commentList = blogPost.getComments();
+            commentList.forEach(comment -> {
+                comment.setBlogPost(null);
+                users[0] = blogPost.getUsers();
+                users[0].setPassword(null);
+                users[0].setDateOfBirth(null);
+            });
+        });
+        return blogPostRepo.getBlogPostList();
     }
 
     private String saveImage(MultipartFile image) throws IOException {

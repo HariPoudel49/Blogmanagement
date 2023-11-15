@@ -1,12 +1,12 @@
 package com.bm.blogmanagement.entity;
 
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 import java.util.List;
+
 @Table(name = "tbl_blog_post")
 @Entity
 @Data
@@ -26,7 +26,7 @@ public class BlogPost {
     private List<Comment> comments;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users users;
 
 }
